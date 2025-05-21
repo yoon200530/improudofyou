@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>I'm Proud of You</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      overflow-x: hidden;
+      background-color: #fff0f5;
+      scroll-behavior: smooth;
+    }
+
+    .background {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      overflow: hidden; 
+    }
+
+    .background::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('bg.jpg') no-repeat center center/cover;
+      filter: blur(3px);
+      z-index: 0;
+    }
+
+    .background > * {
+      position: relative;
+      z-index: 1; 
+    }
+
+    .intro {
+      color: #ffe4ec;
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      animation: fadeInDown 1.5s ease-in-out;
+      text-shadow: 2px 2px 4px #000;
+    }
+
+    .quote {
+      color: white;
+      font-size: 2rem;
+      font-weight: 500;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      animation: fadeInUp 1.5s ease-in-out;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    .card-container {
+
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 4rem 2rem;
+      background: #fef6f9;
+      position: relative;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      width: 260px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #e91e63;
+      position: relative;
+      animation: fadeInUp 1s ease-in-out;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .gif-display {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .gif-display img {
+      width: 300px;
+      max-width: 90%;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    .quote-text {
+      margin-top: 2rem;
+      font-size: 1.4rem;
+      color: #4b2e2e;
+      background-color: #e6b7b7;
+      border-radius: 20px;
+      text-align: center;
+      padding: 1rem;
+      animation: fadeIn 0.8s ease-in-out;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .intro {
+        font-size: 2rem;
+      }
+      .quote {
+        font-size: 1.4rem;
+        padding: 1rem;
+      }
+      .card {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background">
+    <div>
+      <div class="intro">Hi Binibining Andrea 💖</div>
+      <div class="quote" id="quote"></div>
+    </div>
+  </div>
+
+  <div class="card-container">
+    <div class="card" id="card1">❤️ For Your Strength</div>
+    <div class="card" id="card2">🌹 For Your Kindness</div>
+    <div class="card" id="card3">🌟 For Your Growth</div>
+  </div>
+
+  <div class="quote-text" id="quoteText"></div>
+  <div class="gif-display" id="gifDisplay"></div>
+  
+
+  <!-- Audio -->
+  <audio id="bg-music" src="New West - Those Eyes (Lyrics).mp3" autoplay loop></audio>
+  <audio id="card1-sound" src="card1.mp3"></audio>
+  <audio id="card2-sound" src="card2.mp3"></audio>
+  <audio id="card3-sound" src="card3.mp3"></audio>
+
+  <script>
+    const generalQuotes = [
+      "Ang puso mong mapagmahal ang paborito kong parte sayo.",
+      "Mahal kita, hindi lang ngayon kundi araw-araw na may pagmamalaki.",
+      "Napakatatag mong babae. Walang duda—ikaw ang inspirasyon ko.",
+      "Every time you rise, you rise higher.",
+      "You're stronger than yesterday, and that's what matters.",
+      "Tinitiis mo lahat ng sakit para lang sa mga pangarap mo. Proud ako sayo.",
+      "You’re building a life filled with meaning.",
+      "Bawat pagsubok na napagtagumpayan mo, tagumpay ko rin.",
+      "I’m honored to witness your growth.",
+      "Hindi ko kailangan ng iba pa—ikaw lang sapat na dahilan.",
+      "Sa bawat gising mo, mas lalo akong humahanga sa tapang mo.",
+      "I'm so proud of the woman you're becoming every single day.",
+      "Walang araw na hindi ako humahanga sa'yo.",
+      "Kahit anong bagyo, hindi mo tinatalikuran ang laban.",
+      "Lahat ng ginagawa mo, para sa mahal mo sa buhay. Nakakabilib ka.",
+      "You're creating beauty with every step.",
+      "Lahat ng sakripisyo mo, hindi nasasayang.",
+      "Your journey is filled with grace, and I see it every day.",
+      "You never give up—and that’s why I admire you.",
+      "Ang bawat ngiti mo ay patunay ng tagumpay mo.",
+      "You're a miracle in motion.",
+      "Bawat araw na lumilipas, mas lalo kang nagiging kamangha-mangha.",
+      "Kahit pagod ka, hindi mo pa rin nakakalimutang ngumiti.",
+      "Kahit mahirap, hindi ka sumusuko. Napakagaling mo.",
+      "You've come so far—keep going.",
+      "You are more than enough.",
+      "Even when no one else sees it, I do—your effort is everything.",
+      "The way you love, so purely, is rare and beautiful.",
+      "You're the heartbeat of my happiness.",
+      "Wala kang kapantay sa puso ko.",
+      "You're building a future with so much love.",
+      "Ikaw ang dahilan kung bakit ako naniniwala sa pag-ibig at tiyaga.",
+      "You make me proud just by existing.",
+      "Ikaw ang lakas ko sa bawat araw.",
+      "You're making your dreams real, one step at a time.",
+      "Maswerte ako na ikaw ang kasama ko.",
+      "You are the kind of woman stories are written about.",
+      "Ikaw ang pinagmumulan ng inspirasyon ko araw-araw.",
+      "Bawat hakbang mo ay hakbang din papalapit sa pangarap natin.",
+      "Ang bawat desisyon mo ay pinagmamalaki ko.",
+      "Bawat luha mo ay hiyas sa mata ko.",
+      "Hindi mo lang binubuo ang sarili mo—binubuo mo rin ako.",
+      "I'm in awe of your courage, your strength, and your love.",
+      "You're not alone—I'm always with you.",
+      "You've conquered so much, and I'm amazed by you.",
+      "Bawat luha mong nalaglag, isang hakbang na palapit sa tagumpay.",
+      "Kahit gaano kahirap, di mo ako iniwan.",
+      "Ikaw ang pangarap na hindi ko kayang bitawan.",
+      "Ang lakas mong humarap sa mundo ay inspirasyon sa lahat.",
+      "You're making history—your story matters.",
+      "You redefine what strength looks like.",
+      "Your passion moves mountains.",
+      "Hindi mo alam kung gaano kita hinahangaan araw-araw.",
+      "You shine brighter after every storm.",
+      "You grow, you learn, and you glow.",
+      "Hindi biro ang pinagdadaanan mo, pero nandito ka pa rin.",
+      "Kahit simpleng babae ka, punong-puno ka ng giting at dangal.",
+      "Every step you take, I’m cheering you on.",
+      "Ang tibay ng loob mo ang nagsisilbing liwanag sa madilim na daan.",
+      "You’re unstoppable, and I see it in your eyes.",
+      "Every decision you make out of love is powerful.",
+      "You're the reason I believe in perseverance.",
+      "Ikaw ang patunay na kaya ng babae ang lahat.",
+      "You push through even the hardest days, and that’s beautiful.",
+      "Wala kang katulad—ikaw lang sapat na.",
+      "Saludo ako sa bawat hakbang mong patungo sa pangarap.",
+      "Ang bawat pagkakamali mo ay naging bahagi ng iyong pag-angat.",
+      "Your smile after every struggle is my greatest joy.",
+      "Ang husay mo sa pagmamahal ay nakakabighani.",
+      "I'm proud to walk this life with you.",
+      "Hindi lahat kayang tiisin ang hirap gaya mo.",
+      "You're the strongest person I know.",
+      "Mahal, bawat tagumpay mo ay tagumpay ko rin.",
+      "Ikaw ang pinakamatibay na taong kilala ko.",
+      "You’ve made me a better person just by being you.",
+      "You’re a light in this world.",
+      "Every day, you amaze me more.",
+      "You inspire me just by being you.",
+      "You're handling challenges with such grace.",
+      "Ikaw ang pinagmumulan ng tapang ko araw-araw.",
+      "Even when you're tired, you still choose to love and give.",
+      "Ikaw ang pinakamatatag na taong kilala ko.",
+      "Bawat desisyon mo ay may kasamang pagmamahal.",
+      "Ang puso mo ay puno ng pagmamahal at tapang.",
+      "You're my favorite success story.",
+      "Hindi ako magsasawang ipagmalaki ka.",
+      "Ang bawat araw na kasama kita ay biyaya.",
+      "Your strength reminds me what love really means.",
+      "Kahit di mo sinasabi, alam kong pinipilit mong maging matatag.",
+      "I’m your number one fan, forever and always.",
+      "You're the definition of resilience.",
+      "You are unstoppable, and I see it in your eyes.",
+      "You're not just surviving, you're thriving.",
+      "You've made me stronger by being in my life.",
+      "You're the reason I smile every day.",
+      "You're more than I ever dreamed of.",
+      "Your strength is the proof of your love.",
+      "You're everything I've ever wanted and more."
+    ];
+
+    const quoteCategories = {
+      strength: [
+        "You carry so much strength in your heart. Don't ever forget it.",
+        "Even in your quietest moments, your strength speaks volumes.",
+        "Your strength inspires me every single day.",
+        "Sa bawat pagsubok, mas lalo kang tumitibay at humuhubog ng kwento ng tagumpay.",
+        "Kahit gaano man kahirap, ang puso mo ay hindi sumusuko.",
+        "Tiwala lang, taglay mo ang lakas ng isang mandirigma.",
+        "Strength doesn’t come from what you can do, it comes from overcoming the things you once thought you couldn’t.",
+        "Hindi sukatan ng lakas ang hindi pagiyak, kundi ang muling pagbangon.",
+        "You are stronger than any storm life throws your way.",
+        "Huwag mong kalilimutan, ang puso mo ay may kapangyarihan.",
+        "Every scar you have is proof that you were stronger than whatever tried to hurt you.",
+        "Kapag naubos ang lahat, doon mo mararamdaman ang tunay mong lakas.",
+        "You have survived 100% of your hardest days.",
+        "Sa dilim, ikaw ang ilaw ng iyong sariling landas.",
+        "Strength is not about muscle, it’s about heart.",
+        "Hindi hadlang ang kahirapan sa taong matatag ang loob."
+      ],
+      kindness: [
+        "Your kindness is like sunshine on a rainy day.",
+        "Thank you for being a gentle soul in a busy world.",
+        "The world needs more people like you—kind and thoughtful.",
+        "Ang kabutihang loob mo ay isang ilaw na nagbibigay liwanag sa madilim na mundo.",
+        "Sa bawat ngiti mo, damang-dama ng iba ang tunay na malasakit.",
+        "Hindi lang salita, kundi gawa ang tunay na pagmamalasakit.",
+        "Kindness is the language which the deaf can hear and the blind can see.",
+        "Isang maliit na kabaitan ay may malakas na epekto.",
+        "Maraming tao ang nadarama ang init ng puso mo kahit hindi mo sinasabi.",
+        "Ang mundo ay mas magandang lugar dahil sa mga tulad mo.",
+        "Your kindness creates ripples of hope in others.",
+        "Ang bawat pagtulong mo ay nagsisilbing inspirasyon sa iba.",
+        "Kindness begins with understanding and compassion.",
+        "Sa bawat mabait na kilos, may nababago kang buhay.",
+        "Being kind is a superpower you always have.",
+        "Kapag mabait ka, nagkakaroon ka ng tunay na kapayapaan sa puso."
+      ],
+      growth: [
+        "You've grown in ways I can't even describe.",
+        "Every challenge you face becomes a new opportunity to shine.",
+        "I’m proud of how far you’ve come.",
+        "Ang bawat hakbang mo ay patunay ng pag-unlad at tagumpay.",
+        "Huwag matakot sa pagbabago—ito ang susi sa paglago.",
+        "Sa bawat pagkakamali, natututo ka ng isang bagong aral.",
+        "Growth is painful. Change is painful. But nothing is as painful as staying stuck somewhere you don’t belong.",
+        "Ang paglago ay isang proseso, hindi isang destinasyon.",
+        "Minsan kailangan mong masira para muling buuin ang sarili mo.",
+        "Every day is a new chance to grow stronger and wiser.",
+        "Lumago ka nang dahan-dahan, huwag magmadali.",
+        "Sa bawat pagsubok, mas lumalawak ang iyong kakayahan.",
+        "True growth comes from embracing discomfort.",
+        "Tiwala lang, ang bawat pagsubok ay bahagi ng iyong kwento ng tagumpay.",
+        "Progress, not perfection, is the goal.",
+        "Walang paglago kung walang pagbabago."
+      ]
+    };
+
+    const quoteEl = document.getElementById("quote");
+    const quoteText = document.getElementById("quoteText");
+    const bgMusic = document.getElementById("bg-music");
+
+    // Initial random intro quote
+    quoteEl.textContent = generalQuotes[Math.floor(Math.random() * generalQuotes.length)];
+
+    bgMusic.volume = 0.3;
+    bgMusic.play().catch(() => {
+      document.addEventListener("click", () => bgMusic.play(), { once: true });
+    });
+
+    const gifs = {
+      card1: 'https://i.pinimg.com/originals/9c/af/57/9caf57a35a5f702a92621f7f0aca8e4d.gif',
+      card2: 'https://gifdb.com/images/high/peach-and-goma-cat-kisses-9uj1959adlfrj30b.gif',
+      card3: 'https://media1.tenor.com/m/4Gv1Q5DsAtAAAAAC/up-movie-love.gif'
+    };
+
+    function showGif(src) {
+      const gifEl = document.getElementById("gifDisplay");
+      gifEl.innerHTML = `<img src="${src}" alt="reaction gif">`;
+    }
+
+    document.getElementById("card1").addEventListener("click", () => {
+      document.getElementById("card1-sound").play();
+      showGif(gifs.card1);
+      quoteText.textContent = quoteCategories.strength[Math.floor(Math.random() * quoteCategories.strength.length)];
+    });
+
+    document.getElementById("card2").addEventListener("click", () => {
+      document.getElementById("card2-sound").play();
+      showGif(gifs.card2);
+      quoteText.textContent = quoteCategories.kindness[Math.floor(Math.random() * quoteCategories.kindness.length)];
+    });
+
+    document.getElementById("card3").addEventListener("click", () => {
+      document.getElementById("card3-sound").play();
+      showGif(gifs.card3);
+      quoteText.textContent = quoteCategories.growth[Math.floor(Math.random() * quoteCategories.growth.length)];
+    });
+  </script>
+</body>
+</html>
